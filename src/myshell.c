@@ -4,7 +4,12 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include "ls_command.h"
+
+#define BUF_SIZE 1024
+#define COUNT_SIZE 16
 
 #define MAX_LINE 80
 #define MAX_ARGS 10
@@ -45,7 +50,15 @@ int main() {
     } else if (strcmp(argv[0], "ls") == 0) { // ls
       my_ls();
     } else if (strcmp(argv[0], "cat") == 0) { // cat
+      int fd;
+      int length;
+      char buf[BUF_SIZE];
 
+      fd = open(argv[1], O_RDONLY);
+      while ((length = read(fd, buf, COUNT_SIZE)) > 0) {
+        write(1, buf, length);
+      }
+      close(fd);
     } else {
       //실행파일 access
       if (access(argv[0], X_OK) == 0) { // execv

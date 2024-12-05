@@ -6,3 +6,4 @@ bin/myshell
 *.exe
 *.out
 *.log
+*.txt
